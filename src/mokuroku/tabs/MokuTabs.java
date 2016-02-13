@@ -4,7 +4,7 @@ import java.util.List;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import mokuroku.tabs.interfaceParts.mokuObjects.MokuStockItem;
+import mokuroku.tabs.interfaceParts.MokuStockItem;
 
 /**
  * @author Rebecca Lee

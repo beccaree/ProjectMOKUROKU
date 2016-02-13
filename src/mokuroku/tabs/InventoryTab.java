@@ -1,14 +1,18 @@
 package mokuroku.tabs;
 
+import java.util.Optional;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
-import mokuroku.tabs.interfaceParts.ItemTile;
+import mokuroku.tabs.interfaceParts.MokuStockItem;
+import mokuroku.tabs.interfaceParts.NewItemDialog;
 
 /**
  * @author Rebecca Lee
@@ -38,7 +42,13 @@ public class InventoryTab extends Tab {
 		// Action Listener for btnNewItem
 		btnNewItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-            	tilePane.getChildren().add(new ItemTile());
+            	
+            	Dialog<MokuStockItem> dialog = new NewItemDialog();
+            	Optional<MokuStockItem> newItem = dialog.showAndWait();
+            	if (newItem.isPresent()) {
+            		tilePane.getChildren().add(newItem.get());
+            	}
+            	
             }
         }); 
 		
