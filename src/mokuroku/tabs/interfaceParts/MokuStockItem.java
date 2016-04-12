@@ -18,6 +18,7 @@ public class MokuStockItem extends BorderPane{
 	protected String description;
 	protected double price;
 	protected int inStock;
+	//protected String imagrUrl;
 	
 	public MokuStockItem(String name, String description, double price, int inStock) {
 		this.name = name;

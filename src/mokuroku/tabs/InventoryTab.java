@@ -34,7 +34,7 @@ public class InventoryTab extends Tab {
 		// Bottom half with all the item tiles
 		ScrollPane scrollBar = new ScrollPane();
 		TilePane tilePane = new TilePane();
-		tilePane.setPadding(new Insets(50, 50, 50, 50));
+		tilePane.setPadding(new Insets(30, 30, 30, 30));
 		tilePane.setVgap(30);
 		tilePane.setHgap(50);
 		tilePane.setPrefColumns(3);
