@@ -2,6 +2,7 @@ package mokuroku;
 	
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -10,7 +11,10 @@ import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -57,8 +61,23 @@ public class MokuInit extends Application {
 			titleNew.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 			gridNew.add(titleNew, 0, 0, 2, 1);
 			
+			Label newName = new Label("Name:");
+			gridNew.add(newName, 0, 1);
+
+			TextField nameTextField = new TextField();
+			gridNew.add(nameTextField, 1, 1);
+			
+			Button btnCancel = new Button("Cancel");
+			Button btnCreate = new Button("Create");
+			
+			HBox hbBtn = new HBox(10);
+			hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+			hbBtn.getChildren().addAll(btnCancel, btnCreate);
+			gridNew.add(hbBtn, 1, 2);
+			
 			Scene newScene = new Scene(gridNew, 440, 240);
 			
+			// Button event handlers
 			btnNewInventory.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override
 			    public void handle(ActionEvent e) {
@@ -66,6 +85,32 @@ public class MokuInit extends Application {
 			        primaryStage.setScene(newScene);
 			    }
 			});
+			
+			btnOpenExisting.setOnAction(new EventHandler<ActionEvent>() {
+			    @Override
+			    public void handle(ActionEvent e) {
+			    	// Goes to open existing scene
+			        //primaryStage.setScene(newScene);
+			    }
+			});
+			
+			btnCancel.setOnAction(new EventHandler<ActionEvent> () {
+				@Override
+				public void handle(ActionEvent e) {
+					// back to start scene
+					primaryStage.setScene(startScene);
+				}
+			});
+			
+			btnCreate.setOnAction(new EventHandler<ActionEvent> () {
+				@Override
+				public void handle(ActionEvent e) {
+					// open main screen
+					new MokuMain();
+					primaryStage.close();					
+				}
+			});
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -73,15 +118,34 @@ public class MokuInit extends Application {
 	
 	public static void main(String[] args) {
 		// http://www.tutorialspoint.com/sqlite/sqlite_java.htm
-//		Connection c = null;
-//	    try {
-//	      Class.forName("org.sqlite.JDBC");
-//	      c = DriverManager.getConnection("jdbc:sqlite:MokuSessions.db");
-//	    } catch ( Exception e ) {
-//	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-//	      System.exit(0);
-//	    }
-//	    System.out.println("Opened database successfully");
+		Connection c = null;
+		Statement stmt = null;
+	    try {
+	    	Class.forName("org.sqlite.JDBC");
+	    	c = DriverManager.getConnection("jdbc:sqlite:MokuSessions.db");
+	    
+	    	stmt = c.createStatement();
+	    	String sql = "CREATE TABLE IF NOT EXISTS Inventory " +
+	                   "(id 	INT 	PRIMARY KEY," +
+	                   " name 	TEXT 	NOT NULL)";
+	    	stmt.executeUpdate(sql);
+	    	
+	    	sql = "CREATE TABLE IF NOT EXISTS Items" +
+	    			"(iid	INT," +
+	    			" iname TEXT	NOT NULL," +
+	    			" description TEXT," +
+	    			" price DECIMAL(3, 3)," +
+	    			" stock	INT		NOT NULL," +
+	    			" FOREIGN KEY(iid) REFERENCES Inventory(id))";
+	    	stmt.executeUpdate(sql);
+	    	
+	    	stmt.close();
+	    } catch ( Exception e ) {
+		    System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		    System.exit(0);
+		}
+    	System.out.println("Opened database and tables successfully");
+    	
 		launch(args);
 	}
 }
