@@ -25,6 +25,8 @@ import javafx.scene.text.Text;
  */
 public class MokuInit extends Application {
 	
+	static DBConnection c;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -106,7 +108,7 @@ public class MokuInit extends Application {
 				@Override
 				public void handle(ActionEvent e) {
 					// open main screen
-					new MokuMain(0);
+					new MokuMain(c, 0);
 					primaryStage.close();					
 				}
 			});
@@ -117,40 +119,9 @@ public class MokuInit extends Application {
 	}
 	
 	public static void main(String[] args) {
-		// http://www.tutorialspoint.com/sqlite/sqlite_java.htm
-		Connection c = null;
-		Statement stmt = null;
-	    try {
-	    	Class.forName("org.sqlite.JDBC");
-	    	c = DriverManager.getConnection("jdbc:sqlite:MokuSessions.db");
-	    
-	    	stmt = c.createStatement();
-	    	String sql = "CREATE TABLE IF NOT EXISTS Inventory " +
-	                   "(id 	INT 	PRIMARY KEY," +
-	                   " name 	TEXT 	NOT NULL)";
-	    	stmt.executeUpdate(sql);
-	    	
-	    	sql = "CREATE TABLE IF NOT EXISTS Items" +
-	    			"(id	INT," +
-	    			" iid	INT		PRIMARY KEY," +
-	    			" iname TEXT	NOT NULL," +
-	    			" description TEXT," +
-	    			" price DECIMAL(3, 2)," +
-	    			" stock	INT		NOT NULL," +
-	    			" FOREIGN KEY(id) REFERENCES Inventory(id))";
-	    	stmt.executeUpdate(sql);
-	    	
-	    	sql = "CREATE TABLE IF NOT EXISTS Sales" +
-	    			"(iid INT," +
-	    			" iname TEXT NOT NULL," +
-	    			" datetime INT)";
-	    	
-	    	stmt.close();
-	    } catch ( Exception e ) {
-		    System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-		    System.exit(0);
-		}
-    	System.out.println("Opened database and created tables successfully");
+		// initialize database connection
+		c = new DBConnection();
+		c.initDB();
     	
 		launch(args);
 	}
