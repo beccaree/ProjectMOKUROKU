@@ -11,7 +11,7 @@ import mokuroku.tabs.MokuTabs;
 
 public class MokuMain extends Stage {
 	
-	public MokuMain() {
+	public MokuMain(int inventoryID) {
 		BorderPane pane = new BorderPane();
 		
 		// Initialize the tabs for the main application

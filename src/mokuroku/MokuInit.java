@@ -106,7 +106,7 @@ public class MokuInit extends Application {
 				@Override
 				public void handle(ActionEvent e) {
 					// open main screen
-					new MokuMain();
+					new MokuMain(0);
 					primaryStage.close();					
 				}
 			});
@@ -139,7 +139,9 @@ public class MokuInit extends Application {
 	    			" FOREIGN KEY(iid) REFERENCES Inventory(id))";
 	    	stmt.executeUpdate(sql);
 	    	
-	    	//sql = "CREATE TABLE IF NOT EXISTS Sales";
+	    	sql = "CREATE TABLE IF NOT EXISTS Sales" +
+	    			"(iid INT," +
+	    			" ";
 	    	
 	    	stmt.close();
 	    } catch ( Exception e ) {
