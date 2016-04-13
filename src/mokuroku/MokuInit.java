@@ -139,12 +139,14 @@ public class MokuInit extends Application {
 	    			" FOREIGN KEY(iid) REFERENCES Inventory(id))";
 	    	stmt.executeUpdate(sql);
 	    	
+	    	//sql = "CREATE TABLE IF NOT EXISTS Sales";
+	    	
 	    	stmt.close();
 	    } catch ( Exception e ) {
 		    System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 		    System.exit(0);
 		}
-    	System.out.println("Opened database and tables successfully");
+    	System.out.println("Opened database and created tables successfully");
     	
 		launch(args);
 	}
