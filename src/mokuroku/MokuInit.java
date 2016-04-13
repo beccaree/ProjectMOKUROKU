@@ -131,17 +131,19 @@ public class MokuInit extends Application {
 	    	stmt.executeUpdate(sql);
 	    	
 	    	sql = "CREATE TABLE IF NOT EXISTS Items" +
-	    			"(iid	INT," +
+	    			"(id	INT," +
+	    			" iid	INT		PRIMARY KEY," +
 	    			" iname TEXT	NOT NULL," +
 	    			" description TEXT," +
-	    			" price DECIMAL(3, 3)," +
+	    			" price DECIMAL(3, 2)," +
 	    			" stock	INT		NOT NULL," +
-	    			" FOREIGN KEY(iid) REFERENCES Inventory(id))";
+	    			" FOREIGN KEY(id) REFERENCES Inventory(id))";
 	    	stmt.executeUpdate(sql);
 	    	
 	    	sql = "CREATE TABLE IF NOT EXISTS Sales" +
 	    			"(iid INT," +
-	    			" ";
+	    			" iname TEXT NOT NULL," +
+	    			" datetime INT)";
 	    	
 	    	stmt.close();
 	    } catch ( Exception e ) {
