@@ -14,7 +14,7 @@ import javafx.scene.layout.GridPane;
 public class NewItemDialog extends Dialog<MokuStockItem> {
 	
 	private ButtonType createButtonType = new ButtonType("Create", ButtonData.OK_DONE);
-	private Node loginButton;
+	private Node btnCreate;
 	private TextField itemName = new TextField();
 	private TextField description = new TextField();
 	
@@ -52,8 +52,8 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		dialogContent.add(stockSpinner, 2, 3);
 		
 		// Enable/Disable Create button depending on whether info was entered.
-		loginButton = this.getDialogPane().lookupButton(createButtonType);
-		loginButton.setDisable(true);
+		btnCreate = this.getDialogPane().lookupButton(createButtonType);
+		btnCreate.setDisable(true);
 		itemName.textProperty().addListener((observable, oldValue, newValue) -> {
 			validateCreateButton();
 		});
@@ -74,9 +74,9 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 
 	private void validateCreateButton() {
 		if (itemName.getText().isEmpty() || description.getText().isEmpty()) {
-			loginButton.setDisable(true);
+			btnCreate.setDisable(true);
 		} else {
-			loginButton.setDisable(false);
+			btnCreate.setDisable(false);
 		}
 	}
 }

@@ -15,9 +15,11 @@ import mokuroku.tabs.SalesTab;
 
 public class MokuMain extends Stage {
 	
-	public MokuMain(DBConnection c, int inventoryID) {
+	public MokuMain(DBConnection c, int inventoryID, String inventoryName) {
 		if (inventoryID == 0) {
 			inventoryID = c.getNewID();
+			//System.out.println("newid = " + inventoryID);
+			c.addNewInventory(inventoryID, inventoryName);
 		}
 		
 		BorderPane pane = new BorderPane();
@@ -40,7 +42,7 @@ public class MokuMain extends Stage {
 		Scene scene = new Scene(pane, 640, 480);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		
-		setTitle("Mokuroku");
+		setTitle("Mokuroku - " + inventoryName);
 		setScene(scene);
 		setMaximized(true);
 		show();

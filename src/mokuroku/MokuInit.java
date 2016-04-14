@@ -1,10 +1,11 @@
 package mokuroku;
-	
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -21,6 +23,7 @@ import javafx.scene.text.Text;
 
 /**
  * @author Rebecca Lee
+ * Every scene squeezed on this page to reduce spaghetti code
  *
  */
 public class MokuInit extends Application {
@@ -30,7 +33,7 @@ public class MokuInit extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			// Starting scene
+			// Starting scene ------------------------------------------------------------------>
 			GridPane grid = new GridPane();
 			grid.setAlignment(Pos.CENTER);
 			grid.setHgap(10);
@@ -53,7 +56,7 @@ public class MokuInit extends Application {
 			primaryStage.setScene(startScene);
 			primaryStage.show();
 			
-			// New scene
+			// New scene ----------------------------------------------------------------------->
 			GridPane gridNew = new GridPane();
 			gridNew.setAlignment(Pos.CENTER);
 			gridNew.setHgap(10);
@@ -71,6 +74,15 @@ public class MokuInit extends Application {
 			
 			Button btnCancel = new Button("Cancel");
 			Button btnCreate = new Button("Create");
+			btnCreate.setDisable(true);
+			nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+				// disable create button if name text field is empty
+				if (nameTextField.getText().isEmpty()) {
+					btnCreate.setDisable(true);
+				} else {
+					btnCreate.setDisable(false);
+				}
+			});
 			
 			HBox hbBtn = new HBox(10);
 			hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
@@ -79,7 +91,36 @@ public class MokuInit extends Application {
 			
 			Scene newScene = new Scene(gridNew, 440, 240);
 			
-			// Button event handlers
+			// Open Existing scene -------------------------------------------------------------->
+			GridPane gridOpen = new GridPane();
+			gridOpen.setAlignment(Pos.CENTER);
+			gridOpen.setHgap(10);
+			gridOpen.setVgap(20);
+			
+			Text titleOpen = new Text("Open Existing Inventory");
+			titleOpen.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+			gridOpen.add(titleOpen, 0, 0, 2, 1);
+			
+			Label lblSelect = new Label("Select an inventory:");
+			gridOpen.add(lblSelect, 0, 1);
+			
+			ListView<String> list = new ListView<String>();
+			ObservableList<String> items = FXCollections.observableArrayList(c.getInventories());
+			list.setPrefHeight(80);
+			list.setItems(items);
+			gridOpen.add(list, 0, 2);
+			
+			Button btnOpen = new Button("Open");
+			Button btnCancel2 = new Button("Cancel");
+			
+			HBox hbBtn2 = new HBox(10);
+			hbBtn2.setAlignment(Pos.BOTTOM_RIGHT);
+			hbBtn2.getChildren().addAll(btnCancel2, btnOpen);
+			gridOpen.add(hbBtn2, 0, 3);
+			
+			Scene openScene = new Scene(gridOpen, 440, 240);
+			
+			// Button event handlers ------------------------------------------------------------>
 			btnNewInventory.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override
 			    public void handle(ActionEvent e) {
@@ -92,23 +133,41 @@ public class MokuInit extends Application {
 			    @Override
 			    public void handle(ActionEvent e) {
 			    	// Goes to open existing scene
-			        //primaryStage.setScene(newScene);
+			        primaryStage.setScene(openScene);
 			    }
 			});
 			
-			btnCancel.setOnAction(new EventHandler<ActionEvent> () {
+			EventHandler<ActionEvent> actionCancel = new EventHandler<ActionEvent> () {
 				@Override
 				public void handle(ActionEvent e) {
 					// back to start scene
 					primaryStage.setScene(startScene);
 				}
-			});
+			};
+			btnCancel.setOnAction(actionCancel);
+			btnCancel2.setOnAction(actionCancel);
 			
 			btnCreate.setOnAction(new EventHandler<ActionEvent> () {
 				@Override
 				public void handle(ActionEvent e) {
 					// open main screen
-					new MokuMain(c, 0);
+					new MokuMain(c, 0, nameTextField.getText());
+					primaryStage.close();					
+				}
+			});
+			
+			btnOpen.setOnAction(new EventHandler<ActionEvent> () {
+				@Override
+				public void handle(ActionEvent e) {
+					int id = 0;
+					// open main screen with initialized values
+					String selected = list.getSelectionModel().getSelectedItem();
+					Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(selected);
+				    while(m.find()) {
+				    	id = Integer.parseInt(m.group(1));    
+				    }
+				    String name = selected.substring(selected.indexOf(" ") + 1, selected.length());
+					new MokuMain(c, id, name);
 					primaryStage.close();					
 				}
 			});
