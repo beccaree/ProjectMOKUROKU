@@ -4,6 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +25,8 @@ import javafx.scene.text.Text;
 
 /**
  * @author Rebecca Lee
- * Every scene squeezed on this page to reduce spaghetti code
+ * Three scenes squeezed on this page to reduce spaghetti code (may separate into individual 
+ * modules later).
  *
  */
 public class MokuInit extends Application {
@@ -111,12 +114,20 @@ public class MokuInit extends Application {
 			gridOpen.add(list, 0, 2);
 			
 			Button btnOpen = new Button("Open");
+			btnOpen.setDisable(true);
 			Button btnCancel2 = new Button("Cancel");
 			
 			HBox hbBtn2 = new HBox(10);
 			hbBtn2.setAlignment(Pos.BOTTOM_RIGHT);
 			hbBtn2.getChildren().addAll(btnCancel2, btnOpen);
 			gridOpen.add(hbBtn2, 0, 3);
+			
+			// list selection listener from: http://www.java2s.com/Code/Java/JavaFX/ListViewselectionlistener.htm
+			list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					btnOpen.setDisable(false);  
+				}
+			});
 			
 			Scene openScene = new Scene(gridOpen, 440, 240);
 			
