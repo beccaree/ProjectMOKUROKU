@@ -14,13 +14,15 @@ import javafx.scene.text.Font;
  */
 public class MokuStockItem extends BorderPane{
 	
+	protected int itemID;
 	protected String name;
 	protected String description;
 	protected double price;
 	protected int inStock;
 	//protected String imagrUrl;
 	
-	public MokuStockItem(String name, String description, double price, int inStock) {
+	public MokuStockItem(int id, String name, String description, double price, int inStock) {
+		this.itemID = id;
 		this.name = name;
 		this.description = description;
 		this.price = price;
@@ -65,8 +67,24 @@ public class MokuStockItem extends BorderPane{
 		this.inStock = inStock;
 	}
 	
+	public void setItemID(int iid) {
+		this.itemID = iid;
+	}
+	
 	public String getName() {
 		return name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public double getPrice() {
+		return price;
+	}
+	
+	public int getStock() {
+		return inStock;
 	}
 	
 	private String formatPrice(double cost) {

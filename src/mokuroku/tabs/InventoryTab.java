@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
+import mokuroku.DBConnection;
 import mokuroku.tabs.interfaceParts.MokuStockItem;
 import mokuroku.tabs.interfaceParts.NewItemDialog;
 
@@ -19,8 +20,13 @@ import mokuroku.tabs.interfaceParts.NewItemDialog;
  *
  */
 public class InventoryTab extends Tab {
+	
+	DBConnection c;
+	int iID;
 
-	public InventoryTab() {
+	public InventoryTab(DBConnection c, int iID) {
+		this.c = c;
+		this.iID = iID;
 		setText("Inventory");
 		BorderPane container = new BorderPane();
 		
@@ -39,6 +45,8 @@ public class InventoryTab extends Tab {
 		tilePane.setHgap(50);
 		tilePane.setPrefColumns(3);
 		
+		tilePane.getChildren().addAll(c.getInventoryItems(iID));
+		
 		// Action Listener for btnNewItem
 		btnNewItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
@@ -46,7 +54,10 @@ public class InventoryTab extends Tab {
             	Dialog<MokuStockItem> dialog = new NewItemDialog();
             	Optional<MokuStockItem> newItem = dialog.showAndWait();
             	if (newItem.isPresent()) {
-            		tilePane.getChildren().add(newItem.get());
+            		MokuStockItem item = newItem.get();
+            		int id = c.addItem(iID, item);
+            		item.setItemID(id); // set item id that has been retrieved from database
+            		tilePane.getChildren().add(item);
             	}
             	
             }

@@ -66,7 +66,7 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		// Convert the result to a MokuStockItem when the create button is clicked.
 		setResultConverter(dialogButton -> {
 		    if (dialogButton == createButtonType) {
-		        return new MokuStockItem(itemName.getText(), description.getText(), Double.parseDouble(priceSpinner.getEditor().getText()), Integer.parseInt(stockSpinner.getEditor().getText()));
+		        return new MokuStockItem(0, itemName.getText(), description.getText(), Double.parseDouble(priceSpinner.getEditor().getText()), Integer.parseInt(stockSpinner.getEditor().getText()));
 		    }
 		    return null;
 		});

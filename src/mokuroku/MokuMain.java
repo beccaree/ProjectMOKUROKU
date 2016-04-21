@@ -17,7 +17,7 @@ public class MokuMain extends Stage {
 	
 	public MokuMain(DBConnection c, int inventoryID, String inventoryName) {
 		if (inventoryID == 0) {
-			inventoryID = c.getNewID();
+			inventoryID = c.getNewID("Inventory");
 			//System.out.println("newid = " + inventoryID);
 			c.addNewInventory(inventoryID, inventoryName);
 		}
@@ -28,7 +28,7 @@ public class MokuMain extends Stage {
 		TabPane allTabs = new TabPane();
 		allTabs.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		Tab mainTab = new MainTab();
-		Tab inventoryTab = new InventoryTab();
+		Tab inventoryTab = new InventoryTab(c, inventoryID);
 		Tab salesTab = new SalesTab();
 		allTabs.getTabs().addAll(mainTab, inventoryTab, salesTab);
 		pane.setCenter(allTabs);

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import mokuroku.tabs.interfaceParts.MokuStockItem;
+
 public class DBConnection {
 	
 	private Connection c = null;
@@ -63,12 +65,12 @@ public class DBConnection {
 		}
 	}
 	
-	public int getNewID() {
+	public int getNewID(String tableName) {
 		// get an ID for the new inventory
 		try {
 			int id = -1;
 			stmt = c.createStatement();
-			String sql = "SELECT COUNT(*) AS number FROM Inventory";
+			String sql = "SELECT COUNT(*) AS number FROM " + tableName;
 			
 			ResultSet rs = stmt.executeQuery(sql);
 			while( rs.next() ) {
@@ -118,4 +120,54 @@ public class DBConnection {
 			return null;
 		}
 	}
+
+	public int addItem(int inventoryID, MokuStockItem newItem) {
+		//returns the new item id
+		try {
+			int newItemID = getNewID("Items");
+			stmt = c.createStatement();
+			String sql = "INSERT INTO Items (id, iid, iname, description, price, stock) VALUES (" +
+						 inventoryID + ", " +
+						 newItemID + ", " +
+						 "'" + newItem.getName() + "', " +
+						 "'" + newItem.getDescription() + "', " +
+						 newItem.getPrice() + ", " +
+						 newItem.getStock() + ")";
+			stmt.executeUpdate(sql);
+			
+	    	stmt.close();
+	    	return newItemID;
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			return -1;
+		}
+	}
+
+	public ArrayList<MokuStockItem> getInventoryItems(int iID) {
+		// returns a list of items that have inventoryID = iID
+		ArrayList<MokuStockItem> result = new ArrayList<MokuStockItem>();
+		try {
+			stmt = c.createStatement();
+			String sql = "SELECT * FROM Items WHERE id = " + iID;
+			ResultSet rs = stmt.executeQuery(sql);
+			while( rs.next() ) {
+				int itemID = rs.getInt("iid");
+				String name = rs.getString("iname"); 
+				String descr = rs.getString("description");
+				double price = rs.getDouble("price");
+				int stock = rs.getInt("stock");
+				
+				MokuStockItem item = new MokuStockItem(itemID, name, descr, price, stock);
+				result.add(item);
+			}
+			
+			rs.close();
+	    	stmt.close();
+	    	return result;
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			return null;
+		}
+	}
+
 }
