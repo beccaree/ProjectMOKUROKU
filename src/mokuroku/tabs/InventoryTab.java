@@ -21,8 +21,11 @@ import mokuroku.tabs.interfaceParts.NewItemDialog;
  */
 public class InventoryTab extends Tab {
 	
+	InventoryTab self = this;
+	
 	DBConnection c;
 	int iID;
+	private TilePane tilePane = new TilePane();
 
 	public InventoryTab(DBConnection c, int iID) {
 		this.c = c;
@@ -39,19 +42,18 @@ public class InventoryTab extends Tab {
 		
 		// Bottom half with all the item tiles
 		ScrollPane scrollBar = new ScrollPane();
-		TilePane tilePane = new TilePane();
 		tilePane.setPadding(new Insets(30, 30, 30, 30));
 		tilePane.setVgap(30);
 		tilePane.setHgap(50);
 		tilePane.setPrefColumns(3);
 		
-		tilePane.getChildren().addAll(c.getInventoryItems(iID));
+		tilePane.getChildren().addAll(c.getInventoryItems(iID, self));
 		
 		// Action Listener for btnNewItem
 		btnNewItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
             	
-            	Dialog<MokuStockItem> dialog = new NewItemDialog();
+            	Dialog<MokuStockItem> dialog = new NewItemDialog(self);
             	Optional<MokuStockItem> newItem = dialog.showAndWait();
             	if (newItem.isPresent()) {
             		MokuStockItem item = newItem.get();
@@ -66,6 +68,16 @@ public class InventoryTab extends Tab {
 		scrollBar.setContent(tilePane);
 		container.setCenter(scrollBar);
 		setContent(container);
+	}
+	
+	public void update() {
+		tilePane.getChildren().clear();
+		tilePane.getChildren().addAll(c.getInventoryItems(iID, self));
+	}
+
+	public void delete(int itemID) {
+		c.delete(itemID);
+		update();
 	}
 	
 }

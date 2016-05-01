@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import mokuroku.tabs.InventoryTab;
 import mokuroku.tabs.interfaceParts.MokuStockItem;
 
 public class DBConnection {
@@ -30,7 +31,7 @@ public class DBConnection {
 			stmt = c.createStatement();
 			String sql = "CREATE TABLE IF NOT EXISTS Inventory " +
 						"(id INT PRIMARY KEY," +
-						" name TEXT NOT NULL)";
+						" name TEXT NOT NULL);";
 			stmt.executeUpdate(sql);
 			    	
 			sql = "CREATE TABLE IF NOT EXISTS Items" +
@@ -40,13 +41,13 @@ public class DBConnection {
 					" description TEXT," +
 					" price DECIMAL(3, 2)," +
 					" stock INT NOT NULL," +
-					" FOREIGN KEY(id) REFERENCES Inventory(id))";
+					" FOREIGN KEY(id) REFERENCES Inventory(id));";
 			stmt.executeUpdate(sql);
 			    	
 	    	sql = "CREATE TABLE IF NOT EXISTS Sales" +
 	    			"(iid INT," +
 			    	" iname TEXT NOT NULL," +
-			    	" datetime INT)";
+			    	" datetime INT);";
 	    	stmt.executeUpdate(sql);
 	    	
 //	    	sql = "DELETE FROM Inventory WHERE id = 4";
@@ -70,7 +71,7 @@ public class DBConnection {
 		try {
 			int id = -1;
 			stmt = c.createStatement();
-			String sql = "SELECT COUNT(*) AS number FROM " + tableName;
+			String sql = "SELECT COUNT(*) AS number FROM " + tableName + ";";
 			
 			ResultSet rs = stmt.executeQuery(sql);
 			while( rs.next() ) {
@@ -90,7 +91,7 @@ public class DBConnection {
 		// create a new inventory
 		try {
 			stmt = c.createStatement();
-			String sql = "INSERT INTO Inventory (id, name) VALUES (" + id + ", '" + name + "')";
+			String sql = "INSERT INTO Inventory (id, name) VALUES (" + id + ", '" + name + "');";
 			stmt.executeUpdate(sql);
 			
 	    	stmt.close();
@@ -105,7 +106,7 @@ public class DBConnection {
 		try {
 			String tuple;
 			stmt = c.createStatement();
-			String sql = "SELECT * FROM Inventory";
+			String sql = "SELECT * FROM Inventory;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while( rs.next() ) {
 				tuple = "(" + rs.getInt("id") + ") " + rs.getString("name"); 
@@ -132,7 +133,7 @@ public class DBConnection {
 						 "'" + newItem.getName() + "', " +
 						 "'" + newItem.getDescription() + "', " +
 						 newItem.getPrice() + ", " +
-						 newItem.getStock() + ")";
+						 newItem.getStock() + ");";
 			stmt.executeUpdate(sql);
 			
 	    	stmt.close();
@@ -143,12 +144,12 @@ public class DBConnection {
 		}
 	}
 
-	public ArrayList<MokuStockItem> getInventoryItems(int iID) {
+	public ArrayList<MokuStockItem> getInventoryItems(int iID, InventoryTab parent) {
 		// returns a list of items that have inventoryID = iID
 		ArrayList<MokuStockItem> result = new ArrayList<MokuStockItem>();
 		try {
 			stmt = c.createStatement();
-			String sql = "SELECT * FROM Items WHERE id = " + iID;
+			String sql = "SELECT * FROM Items WHERE id = " + iID + ";";
 			ResultSet rs = stmt.executeQuery(sql);
 			while( rs.next() ) {
 				int itemID = rs.getInt("iid");
@@ -157,7 +158,7 @@ public class DBConnection {
 				double price = rs.getDouble("price");
 				int stock = rs.getInt("stock");
 				
-				MokuStockItem item = new MokuStockItem(itemID, name, descr, price, stock);
+				MokuStockItem item = new MokuStockItem(parent, itemID, name, descr, price, stock);
 				result.add(item);
 			}
 			
@@ -167,6 +168,19 @@ public class DBConnection {
 		} catch ( Exception e ) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			return null;
+		}
+	}
+
+	public void delete(int itemID) {
+		// delete the item that has item id 'itemID'
+		try {
+			stmt = c.createStatement();
+			String sql = "DELETE from Items where iid = " + itemID + ";";
+			stmt.executeUpdate(sql);
+			
+	    	stmt.close();
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 		}
 	}
 

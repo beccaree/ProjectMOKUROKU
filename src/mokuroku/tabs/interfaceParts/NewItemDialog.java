@@ -8,8 +8,10 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import mokuroku.tabs.InventoryTab;
 
 public class NewItemDialog extends Dialog<MokuStockItem> {
 	
@@ -18,7 +20,7 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 	private TextField itemName = new TextField();
 	private TextField description = new TextField();
 	
-	public NewItemDialog() {
+	public NewItemDialog(InventoryTab parent) {
 		setTitle("Create New Item");
 		
 		getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
@@ -66,7 +68,7 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		// Convert the result to a MokuStockItem when the create button is clicked.
 		setResultConverter(dialogButton -> {
 		    if (dialogButton == createButtonType) {
-		        return new MokuStockItem(0, itemName.getText(), description.getText(), Double.parseDouble(priceSpinner.getEditor().getText()), Integer.parseInt(stockSpinner.getEditor().getText()));
+		        return new MokuStockItem(parent, 0, itemName.getText(), description.getText(), Double.parseDouble(priceSpinner.getEditor().getText()), Integer.parseInt(stockSpinner.getEditor().getText()));
 		    }
 		    return null;
 		});
