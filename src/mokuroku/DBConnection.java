@@ -170,6 +170,10 @@ public class DBConnection {
 			return null;
 		}
 	}
+	
+	public void update(int itemID, MokuStockItem item) {
+		
+	}
 
 	public void delete(int itemID) {
 		// delete the item that has item id 'itemID'

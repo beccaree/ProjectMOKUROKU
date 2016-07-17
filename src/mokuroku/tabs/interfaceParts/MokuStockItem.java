@@ -1,12 +1,14 @@
 package mokuroku.tabs.interfaceParts;
 
+import java.util.Optional;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -15,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import mokuroku.DBConnection;
 import mokuroku.tabs.InventoryTab;
 
 /**
@@ -84,7 +85,17 @@ public class MokuStockItem extends StackPane{
 		    @Override
 		    public void handle(ActionEvent e) {
 		    	// Open an edit item dialog
-		        System.out.println("Edit clicked");
+		    	System.out.println("edit");
+		    	Dialog<MokuStockItem> dialog = new EditItemDialog(parent, self);
+		    	Optional<MokuStockItem> newItem = dialog.showAndWait();
+            	if (newItem.isPresent()) {
+//            		MokuStockItem item = newItem.get();
+//            		displayName.setText(item.getName());
+//            		displayDescr.setText(item.getDescription());
+//            		displayPrice.setText(formatPrice(item.getPrice()));
+//            		displayStock.setText(item.getStock() + " in stock");
+            		parent.updateItem(self.itemID, newItem.get());
+            	}
 		    }
 		});
 		Button btnDelete = new Button("Delete Item");
@@ -93,7 +104,7 @@ public class MokuStockItem extends StackPane{
 		    @Override
 		    public void handle(ActionEvent e) {
 		    	// delete this item from the database and update the inventory view
-		    	parent.delete(self.itemID);
+		    	parent.deleteItem(self.itemID);
 		    }
 		});
 		buttons.getChildren().addAll(btnEdit, btnDelete);
@@ -117,11 +128,12 @@ public class MokuStockItem extends StackPane{
 		});
 	}
 	
-	public void edit(String name, String description, double price, int inStock) {
-		this.name = name;
-		this.description = description;
-		this.price = price;
-		this.inStock = inStock;
+	public void edit(MokuStockItem changed) {
+		this.name = changed.name;
+		this.description = changed.description;
+		this.price = changed.price;
+		this.inStock = changed.inStock;
+		// change all diaplays also
 	}
 	
 	public void setItemID(int iid) {

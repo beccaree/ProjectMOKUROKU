@@ -74,8 +74,13 @@ public class InventoryTab extends Tab {
 		tilePane.getChildren().clear();
 		tilePane.getChildren().addAll(c.getInventoryItems(iID, self));
 	}
+	
+	public void updateItem(int itemID, MokuStockItem item) {
+		c.update(itemID, item);
+		update();
+	}
 
-	public void delete(int itemID) {
+	public void deleteItem(int itemID) {
 		c.delete(itemID);
 		update();
 	}

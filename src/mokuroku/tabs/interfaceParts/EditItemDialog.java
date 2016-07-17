@@ -2,27 +2,27 @@ package mokuroku.tabs.interfaceParts;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import mokuroku.tabs.InventoryTab;
 
-public class NewItemDialog extends Dialog<MokuStockItem> {
+public class EditItemDialog extends Dialog<MokuStockItem> {
 	
-	protected ButtonType createButtonType = new ButtonType("Create", ButtonData.OK_DONE);
-	protected Node btnCreate;
+	protected ButtonType createButtonType = new ButtonType("Save", ButtonData.OK_DONE);
+	protected Node btnSave;
 	protected TextField itemName = new TextField();
 	protected TextField description = new TextField();
 	protected Spinner<Double> priceSpinner = new Spinner<>();
 	protected Spinner<Integer> stockSpinner = new Spinner<>();
-	
-	public NewItemDialog(InventoryTab parent) {
-		setTitle("Create New Item");
+
+	public EditItemDialog(InventoryTab parent, MokuStockItem item) {
+		setTitle("Edit Item");
 		
 		getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
 		
@@ -31,14 +31,13 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		dialogContent.setVgap(10);
 		dialogContent.setPadding(new Insets(20, 100, 10, 10));
 		
-		itemName.setPromptText("Item Name");
-		description.setPromptText("Description");
+		itemName.setText(item.getName());
+		description.setText(item.getDescription());
 		// set spinner for the price
-		SpinnerValueFactory<Double> spinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 100.00, 0.00, 0.01);
-		priceSpinner.setValueFactory(spinnerFactory);
+		priceSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 100.00, item.getPrice(), 0.01));
 		priceSpinner.setEditable(true);
 		// spinner for stock
-		stockSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0, 1));
+		stockSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, item.getStock(), 1));
 		stockSpinner.setEditable(true);
 
 		// add elements into grid
@@ -53,8 +52,7 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		dialogContent.add(stockSpinner, 2, 3);
 		
 		// Enable/Disable Create button depending on whether info was entered.
-		btnCreate = this.getDialogPane().lookupButton(createButtonType);
-		btnCreate.setDisable(true);
+		btnSave = this.getDialogPane().lookupButton(createButtonType);
 		itemName.textProperty().addListener((observable, oldValue, newValue) -> {
 			validateCreateButton();
 		});
@@ -75,9 +73,11 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 
 	private void validateCreateButton() {
 		if (itemName.getText().isEmpty() || description.getText().isEmpty()) {
-			btnCreate.setDisable(true);
+			btnSave.setDisable(true);
 		} else {
-			btnCreate.setDisable(false);
+			btnSave.setDisable(false);
 		}
 	}
+
+
 }
