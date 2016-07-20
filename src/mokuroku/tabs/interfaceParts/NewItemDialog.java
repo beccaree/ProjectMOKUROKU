@@ -25,12 +25,13 @@ import mokuroku.tabs.InventoryTab;
 
 public class NewItemDialog extends Dialog<MokuStockItem> {
 	
-	protected ButtonType createButtonType = new ButtonType("Create", ButtonData.OK_DONE);
+	protected ButtonType createButtonType = new ButtonType("Save", ButtonData.OK_DONE);
 	protected Node btnCreate;
 	protected TextField itemName = new TextField();
 	protected TextField description = new TextField();
 	protected Spinner<Double> priceSpinner = new Spinner<>();
 	protected Spinner<Integer> stockSpinner = new Spinner<>();
+	protected GridPane dialogContent = new GridPane();
 	
 	protected TextField imgUrl = new TextField();
 	protected Button browse = new Button("Browse");
@@ -41,7 +42,6 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		
 		getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
 		
-		GridPane dialogContent = new GridPane();
 		dialogContent.setHgap(10);
 		dialogContent.setVgap(10);
 		dialogContent.setPadding(new Insets(20, 100, 10, 10));
@@ -113,7 +113,7 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		});
 	}
 
-	private void validateCreateButton() {
+	protected void validateCreateButton() {
 		if (itemName.getText().isEmpty() || description.getText().isEmpty() || imgUrl.getText().isEmpty()) {
 			btnCreate.setDisable(true);
 		} else {
