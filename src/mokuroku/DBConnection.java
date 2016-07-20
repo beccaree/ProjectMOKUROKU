@@ -41,6 +41,7 @@ public class DBConnection {
 					" description TEXT," +
 					" price DECIMAL(3, 2)," +
 					" stock INT NOT NULL," +
+					" image TEXT," +
 					" FOREIGN KEY(id) REFERENCES Inventory(id));";
 			stmt.executeUpdate(sql);
 			    	
@@ -127,13 +128,14 @@ public class DBConnection {
 		try {
 			int newItemID = getNewID("Items");
 			stmt = c.createStatement();
-			String sql = "INSERT INTO Items (id, iid, iname, description, price, stock) VALUES (" +
+			String sql = "INSERT INTO Items (id, iid, iname, description, price, stock, image) VALUES (" +
 						 inventoryID + ", " +
 						 newItemID + ", " +
 						 "'" + newItem.getName() + "', " +
 						 "'" + newItem.getDescription() + "', " +
 						 newItem.getPrice() + ", " +
-						 newItem.getStock() + ");";
+						 newItem.getStock() + ", " + 
+						 "'" + newItem.getImage() + "');";
 			stmt.executeUpdate(sql);
 			
 	    	stmt.close();
@@ -157,8 +159,9 @@ public class DBConnection {
 				String descr = rs.getString("description");
 				double price = rs.getDouble("price");
 				int stock = rs.getInt("stock");
+				String image = rs.getString("image");
 				
-				MokuStockItem item = new MokuStockItem(parent, itemID, name, descr, price, stock);
+				MokuStockItem item = new MokuStockItem(parent, itemID, name, descr, price, stock, image);
 				result.add(item);
 			}
 			
@@ -172,14 +175,29 @@ public class DBConnection {
 	}
 	
 	public void update(int itemID, MokuStockItem item) {
-		
+		// update the values of item with itemID
+		try {
+			stmt = c.createStatement();
+			String sql = "UPDATE Items " +
+					"SET iname = '" + item.getName() + "', " +
+					"description = '" + item.getDescription() + "', " +
+					"price = " + item.getPrice() + ", " +
+					"stock = " + item.getStock() + ", " +
+					"image = '" + item.getImage() + "' " +
+					"WHERE iid = " + itemID + ";";
+			stmt.executeUpdate(sql);
+			
+	    	stmt.close();
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		}
 	}
 
 	public void delete(int itemID) {
 		// delete the item that has item id 'itemID'
 		try {
 			stmt = c.createStatement();
-			String sql = "DELETE from Items where iid = " + itemID + ";";
+			String sql = "DELETE from Items WHERE iid = " + itemID + ";";
 			stmt.executeUpdate(sql);
 			
 	    	stmt.close();

@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.Stage;
 import mokuroku.DBConnection;
 import mokuroku.tabs.interfaceParts.MokuStockItem;
 import mokuroku.tabs.interfaceParts.NewItemDialog;
@@ -22,12 +23,14 @@ import mokuroku.tabs.interfaceParts.NewItemDialog;
 public class InventoryTab extends Tab {
 	
 	InventoryTab self = this;
+	Stage window;
 	
 	DBConnection c;
 	int iID;
 	private TilePane tilePane = new TilePane();
 
-	public InventoryTab(DBConnection c, int iID) {
+	public InventoryTab(DBConnection c, int iID, Stage parent) {
+		this.window = parent;
 		this.c = c;
 		this.iID = iID;
 		setText("Inventory");
@@ -85,4 +88,7 @@ public class InventoryTab extends Tab {
 		update();
 	}
 	
+	public Stage getWindow() {
+		return window;
+	}
 }

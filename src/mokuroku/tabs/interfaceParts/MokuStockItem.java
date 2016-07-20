@@ -1,5 +1,6 @@
 package mokuroku.tabs.interfaceParts;
 
+import java.io.File;
 import java.util.Optional;
 
 import javafx.event.ActionEvent;
@@ -9,12 +10,14 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import mokuroku.tabs.InventoryTab;
@@ -32,23 +35,29 @@ public class MokuStockItem extends StackPane{
 	protected String description;
 	protected double price;
 	protected int inStock;
-	//protected String imagrUrl;
+	protected String imgUrl;
 	
 	protected boolean selected = false;
 	
-	public MokuStockItem(InventoryTab parent, int id, String name, String description, double price, int inStock) {
+	public MokuStockItem(InventoryTab parent, int id, String name, String description, double price, int inStock, String imgUrl) {
 		this.itemID = id;
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.inStock = inStock;
+		this.imgUrl = imgUrl;
 		
 		BorderPane itemTile = new BorderPane();
 		// set background colour with CSS
 		itemTile.getStyleClass().add("itemTile");		
 		
 		// picture square
-		itemTile.setCenter(new Rectangle(200, 200, Color.LIGHTBLUE));
+		Rectangle img = new Rectangle(200, 200, Color.LIGHTBLUE);
+		File file = new File(imgUrl);
+		Image image = new Image(file.toURI().toString());
+        ImagePattern imagePattern = new ImagePattern(image);
+        img.setFill(imagePattern);
+		itemTile.setCenter(img);
 		
 		// description panel
 		GridPane content = new GridPane();
@@ -85,15 +94,9 @@ public class MokuStockItem extends StackPane{
 		    @Override
 		    public void handle(ActionEvent e) {
 		    	// Open an edit item dialog
-		    	System.out.println("edit");
 		    	Dialog<MokuStockItem> dialog = new EditItemDialog(parent, self);
 		    	Optional<MokuStockItem> newItem = dialog.showAndWait();
             	if (newItem.isPresent()) {
-//            		MokuStockItem item = newItem.get();
-//            		displayName.setText(item.getName());
-//            		displayDescr.setText(item.getDescription());
-//            		displayPrice.setText(formatPrice(item.getPrice()));
-//            		displayStock.setText(item.getStock() + " in stock");
             		parent.updateItem(self.itemID, newItem.get());
             	}
 		    }
@@ -128,14 +131,6 @@ public class MokuStockItem extends StackPane{
 		});
 	}
 	
-	public void edit(MokuStockItem changed) {
-		this.name = changed.name;
-		this.description = changed.description;
-		this.price = changed.price;
-		this.inStock = changed.inStock;
-		// change all diaplays also
-	}
-	
 	public void setItemID(int iid) {
 		this.itemID = iid;
 	}
@@ -154,6 +149,10 @@ public class MokuStockItem extends StackPane{
 	
 	public int getStock() {
 		return inStock;
+	}
+	
+	public String getImage() {
+		return imgUrl;
 	}
 	
 	private String formatPrice(double cost) {

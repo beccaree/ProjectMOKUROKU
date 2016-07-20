@@ -28,7 +28,7 @@ public class MokuMain extends Stage {
 		TabPane allTabs = new TabPane();
 		allTabs.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		Tab mainTab = new MainTab();
-		Tab inventoryTab = new InventoryTab(c, inventoryID);
+		Tab inventoryTab = new InventoryTab(c, inventoryID, this);
 		Tab salesTab = new SalesTab();
 		allTabs.getTabs().addAll(mainTab, inventoryTab, salesTab);
 		pane.setCenter(allTabs);
