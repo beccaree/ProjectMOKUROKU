@@ -107,14 +107,26 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 		// Convert the result to a MokuStockItem when the create button is clicked.
 		setResultConverter(dialogButton -> {
 		    if (dialogButton == createButtonType) {
-		        return new MokuStockItem(parent, 0, itemName.getText(), description.getText(), Double.parseDouble(priceSpinner.getEditor().getText()), Integer.parseInt(stockSpinner.getEditor().getText()), imgUrl.getText());
+		    	// error handling
+		    	String desc, url;
+		    	if(description.getText().isEmpty()) {
+		    		desc = "";
+		    	} else {
+		    		desc = description.getText();
+		    	}
+		    	if(imgUrl.getText().isEmpty()) {
+		    		url = "";
+		    	} else {
+		    		url = imgUrl.getText();
+		    	}
+		        return new MokuStockItem(parent, 0, itemName.getText(), desc, Double.parseDouble(priceSpinner.getEditor().getText()), Integer.parseInt(stockSpinner.getEditor().getText()), url);
 		    }
 		    return null;
 		});
 	}
 
 	protected void validateCreateButton() {
-		if (itemName.getText().isEmpty() || description.getText().isEmpty() || imgUrl.getText().isEmpty()) {
+		if (itemName.getText().isEmpty()) {
 			btnCreate.setDisable(true);
 		} else {
 			btnCreate.setDisable(false);

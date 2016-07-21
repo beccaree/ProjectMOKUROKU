@@ -9,9 +9,7 @@ import mokuroku.tabs.InventoryTab;
 
 /**
  * @author Rebecca Lee
- * 
- *	This is almost an exact replica of NewItemDialog except for loading in the item info, 
- *	will refactor later, if time allows
+ *
  */
 public class EditItemDialog extends NewItemDialog {
 
@@ -29,10 +27,12 @@ public class EditItemDialog extends NewItemDialog {
 		stockSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, item.getStock(), 1));
 		stockSpinner.setEditable(true);
 		// item image
-		File file = new File(item.getImage());
-		Image image = new Image(file.toURI().toString());
-        ImagePattern imagePattern = new ImagePattern(image);
-        img.setFill(imagePattern);
+		if (item.getImage() != "") {
+			File file = new File(item.getImage());
+			Image image = new Image(file.toURI().toString());
+	        ImagePattern imagePattern = new ImagePattern(image);
+	        img.setFill(imagePattern);
+		}
 
 		getDialogPane().setContent(dialogContent);
 	}

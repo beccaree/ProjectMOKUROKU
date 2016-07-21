@@ -53,10 +53,12 @@ public class MokuStockItem extends StackPane{
 		
 		// picture square
 		Rectangle img = new Rectangle(200, 200, Color.LIGHTBLUE);
-		File file = new File(imgUrl);
-		Image image = new Image(file.toURI().toString());
-        ImagePattern imagePattern = new ImagePattern(image);
-        img.setFill(imagePattern);
+		if (imgUrl != "") {
+			File file = new File(imgUrl);
+			Image image = new Image(file.toURI().toString());
+	        ImagePattern imagePattern = new ImagePattern(image);
+	        img.setFill(imagePattern);
+		}
 		itemTile.setCenter(img);
 		
 		// description panel
