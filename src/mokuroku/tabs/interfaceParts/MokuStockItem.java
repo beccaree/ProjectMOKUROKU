@@ -53,7 +53,7 @@ public class MokuStockItem extends StackPane{
 		
 		// picture square
 		Rectangle img = new Rectangle(200, 200, Color.LIGHTBLUE);
-		if (imgUrl != "") {
+		if (imgUrl.length() > 0) {
 			File file = new File(imgUrl);
 			Image image = new Image(file.toURI().toString());
 	        ImagePattern imagePattern = new ImagePattern(image);

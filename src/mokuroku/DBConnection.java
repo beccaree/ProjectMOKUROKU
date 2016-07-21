@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import mokuroku.tabs.InventoryTab;
 import mokuroku.tabs.interfaceParts.MokuStockItem;
+import mokuroku.tabs.interfaceParts.TileItem;
 
 public class DBConnection {
 	
@@ -51,8 +52,12 @@ public class DBConnection {
 			    	" datetime INT);";
 	    	stmt.executeUpdate(sql);
 	    	
-//	    	sql = "DELETE FROM Inventory WHERE id = 4";
-//	    	stmt.executeUpdate(sql);
+	    	sql = "Select * FROM Items";
+	    	ResultSet rsn = stmt.executeQuery(sql);
+	    	while( rsn.next() ) {
+				System.out.println(rsn.getString("iid") + " " + rsn.getString("iname"));
+			}
+	    	rsn.close();
 
 	    	sql = "SELECT * FROM Inventory";
 	    	ResultSet rs = stmt.executeQuery(sql);
@@ -71,8 +76,16 @@ public class DBConnection {
 		// get an ID for the new inventory
 		try {
 			int id = -1;
+			String column;
+			
+			if(tableName == "Items") {
+				column = "iid";
+			} else {
+				column = "id";
+			}
+			
 			stmt = c.createStatement();
-			String sql = "SELECT COUNT(*) AS number FROM " + tableName + ";";
+			String sql = "SELECT MAX(" + column + ") AS number FROM " + tableName + ";";
 			
 			ResultSet rs = stmt.executeQuery(sql);
 			while( rs.next() ) {
@@ -163,6 +176,36 @@ public class DBConnection {
 				
 				MokuStockItem item = new MokuStockItem(parent, itemID, name, descr, price, stock, image);
 				result.add(item);
+			}
+			
+			rs.close();
+	    	stmt.close();
+	    	return result;
+		} catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			return null;
+		}
+	}
+	
+	public ArrayList<TileItem> getTileItems(int iID) {
+		// returns a list of items that have inventoryID = iID for Main page
+		ArrayList<TileItem> result = new ArrayList<TileItem>();
+		try {
+			stmt = c.createStatement();
+			String sql = "SELECT * FROM Items WHERE id = " + iID + ";";
+			ResultSet rs = stmt.executeQuery(sql);
+			while( rs.next() ) {
+				int itemID = rs.getInt("iid");
+				String name = rs.getString("iname"); 
+				String descr = rs.getString("description");
+				double price = rs.getDouble("price");
+				int stock = rs.getInt("stock");
+				String image = rs.getString("image");
+				
+				if(stock > 0) { // only show up in the main page if there is stock
+					TileItem item = new TileItem(itemID, name, descr, price, stock, image);
+					result.add(item);		
+				}
 			}
 			
 			rs.close();

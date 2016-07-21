@@ -24,13 +24,15 @@ public class InventoryTab extends Tab {
 	
 	InventoryTab self = this;
 	Stage window;
+	MainTab friend;
 	
 	DBConnection c;
 	int iID;
 	private TilePane tilePane = new TilePane();
 
-	public InventoryTab(DBConnection c, int iID, Stage parent) {
+	public InventoryTab(DBConnection c, int iID, Stage parent, MainTab mainTab) {
 		this.window = parent;
+		this.friend = mainTab;
 		this.c = c;
 		this.iID = iID;
 		setText("Inventory");
@@ -63,6 +65,7 @@ public class InventoryTab extends Tab {
             		int id = c.addItem(iID, item);
             		item.setItemID(id); // set item id that has been retrieved from database
             		tilePane.getChildren().add(item);
+            		friend.update();
             	}
             	
             }
@@ -76,6 +79,7 @@ public class InventoryTab extends Tab {
 	public void update() {
 		tilePane.getChildren().clear();
 		tilePane.getChildren().addAll(c.getInventoryItems(iID, self));
+		friend.update();
 	}
 	
 	public void updateItem(int itemID, MokuStockItem item) {

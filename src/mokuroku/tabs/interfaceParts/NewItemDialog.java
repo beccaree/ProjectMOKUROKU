@@ -92,7 +92,7 @@ public class NewItemDialog extends Dialog<MokuStockItem> {
 	                	fileChooser.setInitialDirectory(new File(System.getProperty("user.dir") + "\\images"));
 	                	fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 
-	                    File file = fileChooser.showOpenDialog(parent.getWindow());
+	                    File file = fileChooser.showOpenDialog(((InventoryTab) parent).getWindow());
 	                    if (file != null) {
 	                        imgUrl.setText(file.toString());
 	                        // http://gamedev.stackexchange.com/questions/72924/how-do-i-add-an-image-inside-a-rectangle-or-a-circle-in-javafx

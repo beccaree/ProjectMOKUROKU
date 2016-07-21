@@ -3,7 +3,6 @@ package mokuroku;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.BorderPane;
@@ -27,9 +26,9 @@ public class MokuMain extends Stage {
 		// Initialize the tabs for the main application
 		TabPane allTabs = new TabPane();
 		allTabs.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-		Tab mainTab = new MainTab();
-		Tab inventoryTab = new InventoryTab(c, inventoryID, this);
-		Tab salesTab = new SalesTab();
+		MainTab mainTab = new MainTab(c, inventoryID);
+		InventoryTab inventoryTab = new InventoryTab(c, inventoryID, this, mainTab);
+		SalesTab salesTab = new SalesTab();
 		allTabs.getTabs().addAll(mainTab, inventoryTab, salesTab);
 		pane.setCenter(allTabs);
 
