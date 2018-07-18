@@ -1,5 +1,7 @@
 # ProjectMOKUROKU
-Inventory Keeping application created for a friend
+Inventory and Point-Of-Sale application
+
+UPDATE July 2018: this project on infinite hiatus, same idea being implemented as a Native React application
 
 [Some functionality mentioned below has not been implemented but is in the low-fidelity prototype/design and what I hope to achieve]
 
